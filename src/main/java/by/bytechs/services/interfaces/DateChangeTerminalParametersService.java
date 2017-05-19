@@ -7,5 +7,6 @@ import java.io.InputStream;
  */
 public interface DateChangeTerminalParametersService {
 
-    boolean saveParameters(InputStream inputStream);
+    boolean saveParametersOrSqlScript(InputStream inputStream, boolean operation);
+
 }

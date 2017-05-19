@@ -30,7 +30,8 @@ public class Application {
                 "1. Поиск xml и сохранение в базу статусов кассет;\n" +
                 "2. Поиск данных в CSV файле и создание xml о задержаных картах;\n" +
                 "3. Поиск данных в CSV файле и сохранение данных в базу о переводе канала связи;\n" +
-                "4. Выход.\n");
+                "4. Поиск данных в CSV файле и сохранение данных в sql файл о переводе канала связи;\n" +
+                "5. Выход.\n");
         Scanner scanner = new Scanner(System.in);
         String numberSelect = scanner.nextLine();
         if (numberSelect.equals("1")) {
@@ -38,7 +39,9 @@ public class Application {
         } else if (numberSelect.equals("2")) {
             csvReaderService.saveXmlWuthDrawalCards(System.in);
         } else if (numberSelect.equals("3")) {
-            dateChangeTerminalParametersService.saveParameters(System.in);
+            dateChangeTerminalParametersService.saveParametersOrSqlScript(System.in, true);
+        } else if (numberSelect.equals("4")) {
+            dateChangeTerminalParametersService.saveParametersOrSqlScript(System.in, false);
         } else {
             System.exit(1);
         }
