@@ -1,5 +1,7 @@
 package by.bytechs.util;
 
+import by.bytechs.util.interfaces.CSVReaderService;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -12,34 +14,55 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * @author Romanovich Andrei
  */
-public class CSVReader {
+@Service
+public class CSVReaderServiceImpl implements CSVReaderService {
 
-    public static void main(String[] args) {
-        String line;
-        String cvsSplitBy = ";";
-        BufferedReader br = null;
-        try {
-
-            File fileDir = new File("d:\\xml\\111-old.csv");
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(fileDir), "cp1251"));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            while ((line = br.readLine()) != null) {
-                String[] mas = line.split(cvsSplitBy);
+    @Override
+    public void saveXmlWuthDrawalCards(InputStream inputStream) {
+        Scanner scanner = new Scanner(inputStream);
+        System.out.println("Введите путь к файлу в формате X:\\xxx\\xxxx\\xxxxx.csv");
+        String path = scanner.nextLine();
+        System.out.println("Введите путь сохранениния данных в формате X:\\xxx\\xxxx\\");
+        String saveFilePath = scanner.nextLine();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        List<String[]> arrayList = getMasParamCsvFile(path);
+        for (String[] mas : arrayList) {
+            try {
                 for (int i = 0; i < mas.length; i++) {
                     String terminalID = mas[0].replace("\"", "");
                     Date date = dateFormat.parse(mas[2].replace("\"", ""));
                     String numberCard = mas[3].replace("\"", "");
-                    String reasonDesc= mas[4].replace("\"", "");
-                    saveXmlFile(date, numberCard, terminalID, reasonDesc);
+                    String reasonDesc = mas[4].replace("\"", "");
+                    saveXmlFile(date, numberCard, terminalID, reasonDesc, saveFilePath);
                 }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<String[]> getMasParamCsvFile(String path) {
+        String line;
+        String cvsSplitBy = ";";
+        BufferedReader br = null;
+        List<String[]> arrayList = new ArrayList<>();
+        try {
+            File fileDir = new File(path);
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(fileDir), "cp1251"));
+
+            while ((line = br.readLine()) != null) {
+                String[] mas = line.split(cvsSplitBy);
+                arrayList.add(mas);
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -53,9 +76,10 @@ public class CSVReader {
                 }
             }
         }
+        return arrayList;
     }
 
-    private static void saveXmlFile(Date rejectDate, String numberCard, String termId, String reasonDesc) {
+    private void saveXmlFile(Date rejectDate, String numberCard, String termId, String reasonDesc, String savePath) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-M--HH-mm-ss");
         String date = formatter.format(rejectDate);
         String lastName = "";
@@ -110,7 +134,7 @@ public class CSVReader {
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult(new File("d:\\xml\\result\\Capture CARD_" + termId + "_" + date + ".xml"));
+            StreamResult result = new StreamResult(new File(savePath + "Capture CARD_" + termId + "_" + date + ".xml"));
             transformer.transform(source, result);
         } catch (Exception e) {
             e.printStackTrace();
