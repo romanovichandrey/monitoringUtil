@@ -59,57 +59,58 @@ public class DateChangeTerminalParametersServiceImpl implements DateChangeTermin
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             List<String[]> arrayList = csvReaderService.getMasParamCsvFile(filePath);
-            Map<String, Terminal> terminalMap = null;
+            Map<String, Terminal> terminalMap = terminalService.findAllTerminal();
             Map<Integer, TerminalParameters> parametersMap = null;
             if (operation) {
-                terminalMap = terminalService.findAllTerminal();
                 parametersMap = terminalParametersService.findAllParameter();
             }
             for (String[] mas : arrayList) {
                 Date date;
                 boolean networkBTSStatus;
                 String typeTerminal;
-                String terminalID;
+                String logicalName;
                 try {
                     date = dateFormat.parse(mas[0]);
                     networkBTSStatus = mas[1].contains("true") ? true : false;
                     typeTerminal = mas[3];
-                    terminalID = mas[4];
+                    logicalName = mas[4];
                     if (typeTerminal.equalsIgnoreCase("ATM")) {
-                        while (terminalID.length() != 6) {
-                            terminalID = "0" + terminalID;
+                        while (logicalName.length() != 3) {
+                            logicalName = "0" + logicalName;
                         }
+                        logicalName = "АТМ " + logicalName;
                     } else {
-                        String pstCode = "09749";
-                        while (terminalID.length() != 3) {
-                            terminalID = "0" + terminalID;
+                        while (logicalName.length() != 3) {
+                            logicalName = "0" + logicalName;
                         }
-                        terminalID = pstCode + terminalID;
+                        logicalName = "ПСТ " + logicalName;
                     }
                     if (operation) {
-                        if (terminalMap.get(terminalID) != null) {
+                        if (terminalMap.get(logicalName) != null) {
                             if (networkBTSStatus) {
                                 DateChangeTerminalParameters currentParameter = dateChangeTerminalParametersDao.
-                                        findByTerminalParametersAndTerminalID(parametersMap.get(1), terminalMap.get(terminalID));
+                                        findByTerminalParametersAndTerminalID(parametersMap.get(1), terminalMap.get(logicalName));
                                 if (currentParameter == null) {
                                     DateChangeTerminalParameters changeTerminalParameters = new DateChangeTerminalParameters();
                                     changeTerminalParameters.setDateChange(date);
-                                    changeTerminalParameters.setTerminalID(terminalMap.get(terminalID));
+                                    changeTerminalParameters.setTerminalID(terminalMap.get(logicalName));
                                     changeTerminalParameters.setTerminalParameters(parametersMap.get(1));
                                     dateChangeTerminalParametersDao.saveAndFlush(changeTerminalParameters);
                                 }
                             }
                         }
                     } else {
-                        String insertLine = "INSERT INTO [Monitoring].[dbo].[DateChangeTerminalParameters] " +
-                                "(parameterID, dateChange, terminalID) VALUES(1,";
-                        StringBuffer stringBuffer = new StringBuffer();
-                        stringBuffer.append(insertLine);
-                        stringBuffer.append("'" + sqlFormat.format(date) + "',");
-                        stringBuffer.append("'" + terminalID + "')");
-                        bufferedWriter.write(stringBuffer.toString());
-                        bufferedWriter.newLine();
-                        bufferedWriter.flush();
+                        if (terminalMap.get(logicalName) != null) {
+                            String insertLine = "INSERT INTO [Monitoring].[dbo].[DateChangeTerminalParameters] " +
+                                    "(parameterID, dateChange, terminalID) VALUES(1,";
+                            StringBuffer stringBuffer = new StringBuffer();
+                            stringBuffer.append(insertLine);
+                            stringBuffer.append("'" + sqlFormat.format(date) + "',");
+                            stringBuffer.append("'" + terminalMap.get(logicalName).getTerminalId() + "')");
+                            bufferedWriter.write(stringBuffer.toString());
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+                        }
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();

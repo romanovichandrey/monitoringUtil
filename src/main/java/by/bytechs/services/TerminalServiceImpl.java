@@ -26,7 +26,7 @@ public class TerminalServiceImpl implements TerminalService {
         List<Terminal> terminalList = terminalDao.findAll();
         Map<String, Terminal> terminalMap = new TreeMap<>();
         for (Terminal terminal : terminalList) {
-            terminalMap.put(terminal.getTerminalId(), terminal);
+            terminalMap.put(terminal.getLogicalName(), terminal);
         }
         return terminalMap;
     }
