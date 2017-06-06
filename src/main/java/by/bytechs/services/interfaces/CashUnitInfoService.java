@@ -2,13 +2,13 @@ package by.bytechs.services.interfaces;
 
 import by.bytechs.entity.CashUnitInfo;
 
-import java.io.InputStream;
+import java.util.Date;
 
 /**
  * @author Romanovich Andrei
  */
 public interface CashUnitInfoService {
 
-    void saveCashUnitInfo(InputStream inputStream);
+    boolean saveCashUnitInfo(Date beginDate, Date endDate);
     void saveCashUnitInfo(CashUnitInfo cashUnitInfo);
 }

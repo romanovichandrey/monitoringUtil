@@ -12,10 +12,11 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.InputStream;
 import java.io.StringReader;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Romanovich Andrei
@@ -30,14 +31,8 @@ public class CashUnitInfoServiceImpl implements CashUnitInfoService {
     private CashUnitInfoDao cashUnitInfoDao;
 
     @Override
-    public void saveCashUnitInfo(InputStream inputStream) {
+    public boolean saveCashUnitInfo(Date beginDate, Date endDate) {
         try {
-            Scanner scanner = new Scanner(inputStream);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-            System.out.println("Введите начальную дату в формате dd.MM.yyyy HH:mm:ss");
-            Date beginDate = dateFormat.parse(scanner.nextLine());
-            System.out.println("Введите конечную дату в формате dd.MM.yyyy HH:mm:ss");
-            Date endDate = dateFormat.parse(scanner.nextLine());
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(beginDate);
@@ -64,7 +59,6 @@ public class CashUnitInfoServiceImpl implements CashUnitInfoService {
                         cashStatusHandler = null;
                     }
                 }
-                System.out.println("Сохранение за период: " + dateFormat.format(beginDate) + " - " + dateFormat.format(closeDate) + " прошло успешно!");
                 beginDate = closeDate;
                 calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1);
                 if (dateStatus && (endDateMili - closeDate.getTime()) < (24 * 60 * 60 * 1000)) {
@@ -77,9 +71,10 @@ public class CashUnitInfoServiceImpl implements CashUnitInfoService {
                 System.gc();
 
             }
-            System.out.println("Операция выполнена успешно!");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
