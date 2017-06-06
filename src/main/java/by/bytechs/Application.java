@@ -23,8 +23,8 @@ public class Application {
         ConfigurableApplicationContext context =
                 new SpringApplicationBuilder().sources(Application.class, RepositoryConfig.class, ServiceConfig.class)
                         .headless(false).run(args);
-        CashUnitInfoService cashUnitInfoService = context.getBean(CashUnitInfoService.class);
-        CSVReaderService csvReaderService = context.getBean(CSVReaderService.class);
+
+
         DateChangeTerminalParametersService dateChangeTerminalParametersService = context.getBean(DateChangeTerminalParametersService.class);
         MainWindows mainWindows = context.getBean(MainWindows.class);
         mainWindows.setVisible(true);
@@ -41,7 +41,7 @@ public class Application {
         if (numberSelect.equals("1")) {
 
         } else if (numberSelect.equals("2")) {
-            csvReaderService.saveXmlWuthDrawalCards(System.in);
+
         } else if (numberSelect.equals("3")) {
             dateChangeTerminalParametersService.saveParametersOrSqlScript(System.in, true);
         } else if (numberSelect.equals("4")) {

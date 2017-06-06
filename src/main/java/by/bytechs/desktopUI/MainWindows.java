@@ -1,6 +1,7 @@
 package by.bytechs.desktopUI;
 
 import by.bytechs.services.interfaces.CashUnitInfoService;
+import by.bytechs.util.interfaces.CSVReaderService;
 import org.jdesktop.swingx.*;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,8 @@ public class MainWindows extends JXFrame implements WindowListener {
     private JXDatePicker endDatePicker;
     private JFormattedTextField startFormatField;
     private JFormattedTextField endFormatField;
+    private File selectedFile;
+    private File selectedPath;
     private final WaitPanel waitPanel = new WaitPanel();
 
     public MainWindows(ConfigurableApplicationContext context) {
@@ -244,7 +247,7 @@ public class MainWindows extends JXFrame implements WindowListener {
         JDialog dialog = new JDialog();
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setTitle("Поиск данных в CSV файле и создание xml о задержаных картах");
-        dialog.setBounds(100, 100, 500, 300);
+        dialog.setBounds(100, 100, 500, 200);
 
         JXPanel panel = new JXPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -263,9 +266,72 @@ public class MainWindows extends JXFrame implements WindowListener {
             selectFileChooser.setFileFilter(new FileNameExtensionFilter("CSV", "csv"));
             int ret = selectFileChooser.showDialog(null, "Выбрать файл");
             if (ret == JFileChooser.APPROVE_OPTION) {
-                File file = selectFileChooser.getSelectedFile();
-                selectFileName.setText(file.getAbsolutePath());
+                selectedFile = selectFileChooser.getSelectedFile();
+                selectFileName.setText(selectedFile.getAbsolutePath());
             }
+        });
+
+        JXPanel selectPathPanel = new JXPanel();
+        selectPathPanel.setLayout(new BoxLayout(selectPathPanel, BoxLayout.X_AXIS));
+        panel.add(selectPathPanel);
+
+        JXLabel selectedPathLabel = new JXLabel();
+        selectPathPanel.add(selectedPathLabel);
+        selectPathPanel.add(Box.createHorizontalStrut(5));
+        JXButton selectedPathButton = new JXButton("Выберите путь для сохранения");
+        selectPathPanel.add(selectedPathButton);
+
+        selectedPathButton.addActionListener(e -> {
+            JFileChooser selectedPathChooser = new JFileChooser();
+            selectedPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int ret = selectedPathChooser.showDialog(null, "Выбрать");
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                selectedPath = selectedPathChooser.getCurrentDirectory();
+                selectedPathLabel.setText(selectedPath.getAbsolutePath());
+
+            }
+        });
+
+        panel.add(waitPanel);
+        waitPanel.setVisible(false);
+
+        JXPanel buttonPanel = new JXPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        panel.add(buttonPanel);
+        JXButton applyButton = new JXButton("Выполнить");
+        buttonPanel.add(applyButton);
+        buttonPanel.add(Box.createHorizontalStrut(10));
+        JXButton cancelButton = new JXButton("Отмена");
+        cancelButton.addActionListener(e1 -> dialog.setVisible(false));
+        buttonPanel.add(cancelButton);
+        applyButton.addActionListener(e -> {
+            CSVReaderService csvReaderService = context.getBean(CSVReaderService.class);
+            SwingWorker<Boolean, Void> swingWorker = new SwingWorker<Boolean, Void>() {
+                @Override
+                protected Boolean doInBackground() throws Exception {
+                    waitPanel.setVisible(true);
+                    waitPanel.setBusy(true);
+                    return csvReaderService.saveXmlWuthDrawalCards(selectedFile, selectedPath);
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        boolean status = get();
+                        JOptionPane.showMessageDialog(applyButton, status ? "Операция выполнена успешно!" : "Произошла ошибка");
+                        if (status) {
+                            dialog.setVisible(false);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        waitPanel.setBusy(false);
+                        waitPanel.setVisible(false);
+                    }
+                }
+            };
+            swingWorker.execute();
         });
         dialog.setVisible(true);
 

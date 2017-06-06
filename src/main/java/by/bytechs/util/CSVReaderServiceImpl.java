@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * @author Romanovich Andrei
@@ -26,14 +25,9 @@ import java.util.Scanner;
 public class CSVReaderServiceImpl implements CSVReaderService {
 
     @Override
-    public void saveXmlWuthDrawalCards(InputStream inputStream) {
-        Scanner scanner = new Scanner(inputStream);
-        System.out.println("Введите путь к файлу в формате X:\\xxx\\xxxx\\xxxxx.csv");
-        String path = scanner.nextLine();
-        System.out.println("Введите путь сохранениния данных в формате X:\\xxx\\xxxx\\");
-        String saveFilePath = scanner.nextLine();
+    public boolean saveXmlWuthDrawalCards(File selectedFile, File selectedPath) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        List<String[]> arrayList = getMasParamCsvFile(path);
+        List<String[]> arrayList = getMasParamCsvFile(selectedFile.getAbsolutePath());
         for (String[] mas : arrayList) {
             try {
                 for (int i = 0; i < mas.length; i++) {
@@ -41,12 +35,14 @@ public class CSVReaderServiceImpl implements CSVReaderService {
                     Date date = dateFormat.parse(mas[2].replace("\"", ""));
                     String numberCard = mas[3].replace("\"", "");
                     String reasonDesc = mas[4].replace("\"", "");
-                    saveXmlFile(date, numberCard, terminalID, reasonDesc, saveFilePath);
+                    saveXmlFile(date, numberCard, terminalID, reasonDesc, selectedPath.getAbsolutePath());
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package by.bytechs.util.interfaces;
 
-import java.io.InputStream;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface CSVReaderService {
 
-    void saveXmlWuthDrawalCards(InputStream inputStream);
+    boolean saveXmlWuthDrawalCards(File selectedFile, File selectedPath);
 
     List<String[]> getMasParamCsvFile(String path);
 }
