@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * @author Romanovich Andrei
@@ -40,17 +39,11 @@ public class DateChangeTerminalParametersServiceImpl implements DateChangeTermin
     private TerminalParametersService terminalParametersService;
 
     @Override
-    public boolean saveParametersOrSqlScript(InputStream inputStream, boolean operation) {
+    public boolean saveParametersOrSqlScript(File selectCsvFile, File selectSqlFile, boolean operation) {
         try {
-            Scanner scanner = new Scanner(inputStream);
-            System.out.println("Введите путь к файлу с данными о переводе канала связи в формате X:\\xxx\\xxx.csv");
-            String filePath = scanner.nextLine();
-            String saveFilePath = null;
             BufferedWriter bufferedWriter = null;
             if (!operation) {
-                System.out.println("Введите путь для сохранения файла в формате X:\\xxx\\xxxx.sql");
-                saveFilePath = scanner.nextLine();
-                File saveFile = new File(saveFilePath);
+                File saveFile = selectSqlFile;
                 if (!saveFile.exists()) {
                     saveFile.mkdirs();
                 }
@@ -58,7 +51,7 @@ public class DateChangeTerminalParametersServiceImpl implements DateChangeTermin
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            List<String[]> arrayList = csvReaderService.getMasParamCsvFile(filePath);
+            List<String[]> arrayList = csvReaderService.getMasParamCsvFile(selectCsvFile.getAbsolutePath());
             Map<String, Terminal> terminalMap = terminalService.findAllTerminal();
             Map<Integer, TerminalParameters> parametersMap = null;
             if (operation) {

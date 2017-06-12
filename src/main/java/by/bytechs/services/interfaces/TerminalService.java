@@ -10,4 +10,6 @@ import java.util.Map;
 public interface TerminalService {
 
     Map<String, Terminal> findAllTerminal();
+
+    Map<String, Terminal> findAllPst();
 }

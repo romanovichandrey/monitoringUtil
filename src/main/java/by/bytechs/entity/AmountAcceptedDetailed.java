@@ -2,6 +2,7 @@ package by.bytechs.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * This class mapping on the database amount accepted detailed.
@@ -24,6 +25,8 @@ public class AmountAcceptedDetailed implements Serializable {
     private String insertedCurrency;
     @Column
     private boolean insertedError;
+    @Column
+    private Date timeStamp;
 
     public Long getId() {
         return id;
@@ -71,5 +74,13 @@ public class AmountAcceptedDetailed implements Serializable {
 
     public void setInsertedError(boolean insertedError) {
         this.insertedError = insertedError;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

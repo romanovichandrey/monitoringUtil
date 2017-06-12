@@ -1,12 +1,12 @@
 package by.bytechs.services.interfaces;
 
-import java.io.InputStream;
+import java.io.File;
 
 /**
  * @author Romanovich Andrei
  */
 public interface DateChangeTerminalParametersService {
 
-    boolean saveParametersOrSqlScript(InputStream inputStream, boolean operation);
+    boolean saveParametersOrSqlScript(File selectCsvFile, File selectSqlFile, boolean operation);
 
 }
