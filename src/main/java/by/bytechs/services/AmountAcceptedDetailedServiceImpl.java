@@ -44,22 +44,27 @@ public class AmountAcceptedDetailedServiceImpl implements AmountAcceptedDetailed
     public boolean findAndSave(Date beginDate, Date endDate, WaitPanel waitPanel) {
         Map<String, Terminal> terminalMap = terminalService.findAllPst();
         Pattern pattern = Pattern.compile("(.+):\\s(\\d+)\\s(\\w{3})(.+)");
+        Pattern acceptedPattern = Pattern.compile("(.+)\\s+-\\s+(\\d+)(.+)");
+        Pattern rejectedPattern = Pattern.compile("(.+)\\s+(\\d+)(#NL#)");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        int count = 0;
         for (Map.Entry<String, Terminal> entry : terminalMap.entrySet()) {
-
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(beginDate);
             calendar.add(Calendar.DAY_OF_YEAR, 1);
             Date tempEndDate = calendar.getTime();
             Date tempBeginDate = beginDate;
             while (tempEndDate.compareTo(endDate) != 1) {
-                waitPanel.setText("(" + entry.getValue().getLogicalName() + ":" + dateFormat.format(tempEndDate) + ")");
+                waitPanel.setText("(" + entry.getValue().getLogicalName() + ":" + dateFormat.format(tempEndDate) + "); Всего: " + count);
                 Map<String, List<JournalLogEntity>> journalLogMap = journalLogEntityService.
-                        findByTerminalIdAndDateAndJornalMessageIDs(entry.getKey(), tempBeginDate, tempEndDate, Arrays.asList(8030, 80181, 8018));
+                        findByTerminalIdAndDateAndJornalMessageIDs(entry.getKey(), tempBeginDate, tempEndDate,
+                                Arrays.asList(8030, 80181, 8018, 8019, 8061));
                 for (Map.Entry<String, List<JournalLogEntity>> entry1 : journalLogMap.entrySet()) {
                     AmountAcceptedDetailed detailed = new AmountAcceptedDetailed();
                     detailed.setCashCertID(entry1.getKey());
                     detailed.setTerminalID(entry.getKey());
+                    detailed.setCountAcceptedBank(0);
+                    detailed.setCountRejectedBank(0);
                     for (JournalLogEntity logEntity : entry1.getValue()) {
                         detailed.setTimeStamp(logEntity.getTerminalDate());
                         if (logEntity.getJournalMessageID() == 80181) {
@@ -75,6 +80,20 @@ public class AmountAcceptedDetailedServiceImpl implements AmountAcceptedDetailed
                                 detailed.setInsertedCurrency(matcher.group(3));
                                 detailed.setInsertedError(true);
                             }
+                        } else if (logEntity.getJournalMessageID() == 8019) {
+                            int countBanknotes = 0;
+                            Matcher matcher = acceptedPattern.matcher(logEntity.getMessage());
+                            if (matcher.matches()) {
+                                countBanknotes = Integer.parseInt(matcher.group(2));
+                            }
+                            detailed.setCountAcceptedBank(detailed.getCountAcceptedBank() + countBanknotes);
+                        } else if (logEntity.getJournalMessageID() == 8061) {
+                            int countBanknotes = 0;
+                            Matcher matcher = rejectedPattern.matcher(logEntity.getMessage());
+                            if (matcher.matches()) {
+                                countBanknotes = Integer.parseInt(matcher.group(2));
+                            }
+                            detailed.setCountRejectedBank(detailed.getCountRejectedBank() + countBanknotes);
                         }
                     }
                     save(detailed);
@@ -83,6 +102,7 @@ public class AmountAcceptedDetailedServiceImpl implements AmountAcceptedDetailed
                 calendar.add(Calendar.DAY_OF_YEAR, 1);
                 tempEndDate = calendar.getTime();
             }
+            count++;
         }
         return true;
     }

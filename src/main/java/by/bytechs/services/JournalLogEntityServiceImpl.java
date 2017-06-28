@@ -30,7 +30,7 @@ public class JournalLogEntityServiceImpl implements JournalLogEntityService {
         Date cashCertDate = null;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(endDate);
-        Pattern pattern = Pattern.compile("(.+:)\\s(\\d+)\\s(.+)");
+        Pattern pattern = Pattern.compile("(.+:)\\s(.+)\\s(.+)");
         int iter = 0;
         for (JournalLogEntity entity : journalLogEntities) {
             if (entity.getJournalMessageID() == 8030) {

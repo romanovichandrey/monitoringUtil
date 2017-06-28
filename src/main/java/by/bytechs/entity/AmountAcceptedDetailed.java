@@ -27,6 +27,10 @@ public class AmountAcceptedDetailed implements Serializable {
     private boolean insertedError;
     @Column
     private Date timeStamp;
+    @Column
+    private Integer countRejectedBank;
+    @Column
+    private Integer countAcceptedBank;
 
     public Long getId() {
         return id;
@@ -82,5 +86,21 @@ public class AmountAcceptedDetailed implements Serializable {
 
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public Integer getCountRejectedBank() {
+        return countRejectedBank;
+    }
+
+    public void setCountRejectedBank(Integer countRejectedBank) {
+        this.countRejectedBank = countRejectedBank;
+    }
+
+    public Integer getCountAcceptedBank() {
+        return countAcceptedBank;
+    }
+
+    public void setCountAcceptedBank(Integer countAcceptedBank) {
+        this.countAcceptedBank = countAcceptedBank;
     }
 }

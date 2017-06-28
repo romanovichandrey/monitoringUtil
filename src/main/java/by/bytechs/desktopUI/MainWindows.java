@@ -36,7 +36,7 @@ public class MainWindows extends JXFrame implements WindowListener {
 
     public MainWindows(ConfigurableApplicationContext context) {
         this.context = context;
-        setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/mainWindowsIcon.png")).getImage());
+        //setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/mainWindowsIcon.png")).getImage());
         setTitle("Вспомогательная утилита SMARTiS");
         setBounds(100, 100, 800, 300);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -69,7 +69,7 @@ public class MainWindows extends JXFrame implements WindowListener {
             oneOperationLabel.setBackground(oneOperationPanel.getBackground());
             oneOperationPanel.add(oneOperationLabel);
             JXButton oneOperationButton = new JXButton("Начать выполнение");
-            oneOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
+            //oneOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
             oneOperationButton.setBackground(new Color(168, 204, 241));
             oneOperationPanel.add(Box.createHorizontalStrut(5));
             oneOperationPanel.add(oneOperationButton);
@@ -88,7 +88,7 @@ public class MainWindows extends JXFrame implements WindowListener {
             twoOperationLabel.setBackground(twoOperationPanel.getBackground());
             twoOperationPanel.add(twoOperationLabel);
             JXButton twoOperationButton = new JXButton("Начать выполнение");
-            twoOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
+            //twoOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
             twoOperationButton.setBackground(new Color(168, 204, 241));
             twoOperationPanel.add(Box.createHorizontalStrut(5));
             twoOperationPanel.add(twoOperationButton);
@@ -107,7 +107,7 @@ public class MainWindows extends JXFrame implements WindowListener {
             thirdOperationLabel.setBackground(thirdOperationPanel.getBackground());
             thirdOperationPanel.add(thirdOperationLabel);
             JXButton thirdOperationButton = new JXButton("Начать выполненеие");
-            thirdOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
+            //thirdOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
             thirdOperationButton.setBackground(new Color(168, 204, 241));
             thirdOperationPanel.add(Box.createHorizontalStrut(5));
             thirdOperationPanel.add(thirdOperationButton);
@@ -126,7 +126,7 @@ public class MainWindows extends JXFrame implements WindowListener {
             fourthOperationLabel.setBackground(fourthOperationPanel.getBackground());
             fourthOperationPanel.add(fourthOperationLabel);
             JXButton fourthOperationButton = new JXButton("Начать выполненеие");
-            fourthOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
+            //fourthOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
             fourthOperationButton.setBackground(new Color(168, 204, 241));
             fourthOperationPanel.add(Box.createHorizontalStrut(5));
             fourthOperationPanel.add(fourthOperationButton);
@@ -146,7 +146,7 @@ public class MainWindows extends JXFrame implements WindowListener {
             fifthOperationLabel.setBackground(fifthOperationPanel.getBackground());
             fifthOperationPanel.add(fifthOperationLabel);
             JXButton fifthOperationButton = new JXButton("Начать выполненеие");
-            fifthOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
+            //fifthOperationButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")));
             fifthOperationButton.setBackground(new Color(168, 204, 241));
             fifthOperationPanel.add(Box.createHorizontalStrut(5));
             fifthOperationPanel.add(fifthOperationButton);
@@ -156,7 +156,7 @@ public class MainWindows extends JXFrame implements WindowListener {
         JXButton exitButton = new JXButton("Выход");
         exitButton.setBackground(new Color(168, 204, 241));
         exitButton.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
-        exitButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/closeIcon.png")));
+        //exitButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("images/closeIcon.png")));
         exitButton.addActionListener(e -> {
             setVisible(false);
             dispose();
@@ -171,7 +171,7 @@ public class MainWindows extends JXFrame implements WindowListener {
         dialog.setTitle("Поиск xml и сохранение в базу статусов кассет");
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setBounds(100, 100, 400, 200);
-        dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
+        //dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
 
         JXPanel panel = new JXPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -330,7 +330,7 @@ public class MainWindows extends JXFrame implements WindowListener {
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setTitle("Поиск данных в CSV файле и создание xml о задержаных картах");
         dialog.setBounds(100, 100, 500, 200);
-        dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
+        //dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
 
         JXPanel panel = new JXPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -431,7 +431,7 @@ public class MainWindows extends JXFrame implements WindowListener {
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setTitle("Поиск данных в CSV файле и сохранение данных в базу о переводе канала связи");
         dialog.setBounds(100, 100, 500, 200);
-        dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
+        //dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
 
         JXPanel panel = new JXPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -534,7 +534,7 @@ public class MainWindows extends JXFrame implements WindowListener {
         dialog.setTitle("Сохранение внесенных наличных");
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setBounds(100, 100, 400, 200);
-        dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
+        //dialog.setIconImage(new ImageIcon(ClassLoader.getSystemResource("images/operator.png")).getImage());
 
         JXPanel panel = new JXPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
